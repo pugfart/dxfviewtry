@@ -44,6 +44,9 @@
             this.movedown = new System.Windows.Forms.Button();
             this.moveleft = new System.Windows.Forms.Button();
             this.moveright = new System.Windows.Forms.Button();
+            this.zeropointer = new System.Windows.Forms.Button();
+            this.dataname = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dxf_view)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zoombox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dot_place)).BeginInit();
@@ -78,7 +81,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1118, 593);
+            this.label1.Location = new System.Drawing.Point(1117, 620);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 15);
             this.label1.TabIndex = 3;
@@ -87,7 +90,7 @@
             // zoombox
             // 
             this.zoombox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoombox.Location = new System.Drawing.Point(1121, 235);
+            this.zoombox.Location = new System.Drawing.Point(1121, 249);
             this.zoombox.Name = "zoombox";
             this.zoombox.Size = new System.Drawing.Size(200, 200);
             this.zoombox.TabIndex = 4;
@@ -97,7 +100,7 @@
             // 
             this.zoomplus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomplus.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.zoomplus.Location = new System.Drawing.Point(1226, 441);
+            this.zoomplus.Location = new System.Drawing.Point(1225, 455);
             this.zoomplus.Name = "zoomplus";
             this.zoomplus.Size = new System.Drawing.Size(95, 50);
             this.zoomplus.TabIndex = 5;
@@ -109,7 +112,7 @@
             // 
             this.zoomminus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomminus.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.zoomminus.Location = new System.Drawing.Point(1121, 441);
+            this.zoomminus.Location = new System.Drawing.Point(1120, 455);
             this.zoomminus.Name = "zoomminus";
             this.zoomminus.Size = new System.Drawing.Size(95, 50);
             this.zoomminus.TabIndex = 6;
@@ -121,7 +124,7 @@
             // 
             this.activepoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.activepoint.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.activepoint.Location = new System.Drawing.Point(1121, 500);
+            this.activepoint.Location = new System.Drawing.Point(1120, 514);
             this.activepoint.Name = "activepoint";
             this.activepoint.Size = new System.Drawing.Size(200, 50);
             this.activepoint.TabIndex = 7;
@@ -141,6 +144,7 @@
             this.dot_place.TabStop = false;
             this.dot_place.Paint += new System.Windows.Forms.PaintEventHandler(this.dot_place_Paint);
             this.dot_place.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dot_place_MouseClick);
+            this.dot_place.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dot_place_MouseDown);
             this.dot_place.MouseEnter += new System.EventHandler(this.dot_place_MouseEnter);
             this.dot_place.MouseLeave += new System.EventHandler(this.dot_place_MouseLeave);
             this.dot_place.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dot_place_MouseMove);
@@ -149,7 +153,7 @@
             // 
             this.pointlight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pointlight.BackColor = System.Drawing.Color.Red;
-            this.pointlight.Location = new System.Drawing.Point(1121, 545);
+            this.pointlight.Location = new System.Drawing.Point(1120, 559);
             this.pointlight.Name = "pointlight";
             this.pointlight.Size = new System.Drawing.Size(200, 3);
             this.pointlight.TabIndex = 9;
@@ -231,11 +235,44 @@
             this.moveright.UseVisualStyleBackColor = true;
             this.moveright.Click += new System.EventHandler(this.moveright_Click);
             // 
+            // zeropointer
+            // 
+            this.zeropointer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.zeropointer.Location = new System.Drawing.Point(1120, 570);
+            this.zeropointer.Name = "zeropointer";
+            this.zeropointer.Size = new System.Drawing.Size(200, 30);
+            this.zeropointer.TabIndex = 17;
+            this.zeropointer.Text = "零點";
+            this.zeropointer.UseVisualStyleBackColor = true;
+            this.zeropointer.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // dataname
+            // 
+            this.dataname.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dataname.AutoSize = true;
+            this.dataname.Location = new System.Drawing.Point(13, 689);
+            this.dataname.Name = "dataname";
+            this.dataname.Size = new System.Drawing.Size(41, 15);
+            this.dataname.TabIndex = 18;
+            this.dataname.Text = "label2";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1173, 620);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(41, 15);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "label2";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1345, 711);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dataname);
+            this.Controls.Add(this.zeropointer);
             this.Controls.Add(this.moveright);
             this.Controls.Add(this.moveleft);
             this.Controls.Add(this.movedown);
@@ -284,6 +321,9 @@
         private System.Windows.Forms.Button movedown;
         private System.Windows.Forms.Button moveleft;
         private System.Windows.Forms.Button moveright;
+        private System.Windows.Forms.Button zeropointer;
+        private System.Windows.Forms.Label dataname;
+        private System.Windows.Forms.Label label2;
     }
 }
 
