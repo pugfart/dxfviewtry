@@ -11,6 +11,8 @@ namespace dxftry
     {
         public Point location;
         public Int32 number;
+        public int x_to_zero, y_to_zero;
+        public double x_to_zero_dou, y_to_zero_dou;
 
         public pointer(Int32 x,Int32 y,Int32 No)
         {

@@ -40,5 +40,14 @@ namespace dxftry
                 g.DrawEllipse(Pens.Black, bulleye.X, bulleye.Y, 1, 1);//畫圓心
             }
         }
+
+        public void draw(Image img)
+        {
+            using (Graphics g = Graphics.FromImage(img))
+            {
+                g.DrawEllipse(Pens.Black, bulleye.X - radius, bulleye.Y - radius, 2 * radius, 2 * radius);//畫圓
+                g.DrawEllipse(Pens.Black, bulleye.X, bulleye.Y, 1, 1);//畫圓心
+            }
+        }
     }
 }

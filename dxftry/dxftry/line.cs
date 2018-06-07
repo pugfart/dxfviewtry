@@ -50,5 +50,13 @@ namespace dxftry
                 g.DrawLine(Pens.Black, start, end);//畫線
             }
         }
+
+        public void draw(Image img)
+        {
+            using (Graphics g = Graphics.FromImage(img))
+            {
+                g.DrawLine(Pens.Black, start, end);//畫線
+            }
+        }
     }
 }

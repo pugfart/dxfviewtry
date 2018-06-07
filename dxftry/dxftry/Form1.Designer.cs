@@ -46,7 +46,7 @@
             this.moveright = new System.Windows.Forms.Button();
             this.zeropointer = new System.Windows.Forms.Button();
             this.dataname = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.length_refer = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dxf_view)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zoombox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dot_place)).BeginInit();
@@ -83,9 +83,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(1117, 620);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 15);
+            this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
+            this.label1.Text = "測試用";
             // 
             // zoombox
             // 
@@ -187,7 +187,7 @@
             this.setsize.Name = "setsize";
             this.setsize.Size = new System.Drawing.Size(200, 30);
             this.setsize.TabIndex = 12;
-            this.setsize.Text = "確定";
+            this.setsize.Text = "設定比例尺";
             this.setsize.UseVisualStyleBackColor = true;
             this.setsize.Click += new System.EventHandler(this.setsize_Click);
             // 
@@ -238,7 +238,7 @@
             // zeropointer
             // 
             this.zeropointer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zeropointer.Location = new System.Drawing.Point(1120, 570);
+            this.zeropointer.Location = new System.Drawing.Point(1120, 565);
             this.zeropointer.Name = "zeropointer";
             this.zeropointer.Size = new System.Drawing.Size(200, 30);
             this.zeropointer.TabIndex = 17;
@@ -252,25 +252,25 @@
             this.dataname.AutoSize = true;
             this.dataname.Location = new System.Drawing.Point(13, 689);
             this.dataname.Name = "dataname";
-            this.dataname.Size = new System.Drawing.Size(41, 15);
+            this.dataname.Size = new System.Drawing.Size(67, 15);
             this.dataname.TabIndex = 18;
-            this.dataname.Text = "label2";
+            this.dataname.Text = "顯示檔名";
             // 
-            // label2
+            // length_refer
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1173, 620);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 15);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "label2";
+            this.length_refer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.length_refer.Location = new System.Drawing.Point(1120, 215);
+            this.length_refer.Name = "length_refer";
+            this.length_refer.Size = new System.Drawing.Size(200, 25);
+            this.length_refer.TabIndex = 19;
+            this.length_refer.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1345, 711);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.length_refer);
             this.Controls.Add(this.dataname);
             this.Controls.Add(this.zeropointer);
             this.Controls.Add(this.moveright);
@@ -323,7 +323,7 @@
         private System.Windows.Forms.Button moveright;
         private System.Windows.Forms.Button zeropointer;
         private System.Windows.Forms.Label dataname;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox length_refer;
     }
 }
 
