@@ -21,14 +21,14 @@ namespace dxftry
         private Graphics dxfpen;
         private Pen blackpen;
         private Single startlineX, startlineY, endlineX, endlineY;//直線用
-        private Bitmap draw_dxf;
+        private Bitmap draw_dxf;//繪圖區
         private ThreadStart pre_readthread;
-        private Thread readthread;
+        private Thread readthread;//讀檔執行緒
         private Int32 pointx, pointy, radius;//圓心 半徑
         private bool set_size=false;
         private double sizenum;//底圖縮放倍率
         private Point s;//看圖位置
-        private double wheelzoom;
+        private double wheelzoom;//滾輪縮放
         private List<line> dxflines;
         private List<circle> dxfcircles;
         //放大鏡
@@ -39,9 +39,9 @@ namespace dxftry
         private myDrawRectangel myDraw;
         private Int32 zoomsize;
         //標點
-        private bool active_point = false, active_zeropoint = false, zero_exist = false, startrulerset = false;
+        private bool active_point = false, active_zeropoint = false, zero_exist = false, startrulerset = false;//可以標點? 可以標零點? 零點存在? 比例尺存在?
         private pointer[] pointarray;
-        private Int32 count,c;
+        private Int32 count,c;//標點號碼 比例尺設定用
         private Point zeropoint;
         private Point rulers, rulere;
         private double pixellength;
@@ -51,7 +51,7 @@ namespace dxftry
         public Form1()
         {
             InitializeComponent();
-            this.dot_place.MouseWheel += new MouseEventHandler(dot_place_MouseWheel);
+            this.dot_place.MouseWheel += new MouseEventHandler(dot_place_MouseWheel);//滾輪事件
         }
                 
         private void load_file_Click(object sender, EventArgs e)//讀檔
@@ -66,7 +66,7 @@ namespace dxftry
             {
                 dataname.Text = Path.GetFileNameWithoutExtension(load.FileName);
                 sizenum = 1;
-                zoomsize = 1;
+                wheelzoom = 1;
                 using (dxfpen = Graphics.FromImage(draw_dxf))
                 {
                     dxfpen.Clear(Color.White);
@@ -76,7 +76,7 @@ namespace dxftry
                 pre_readthread = new ThreadStart(showdxf);
                 readthread = new Thread(pre_readthread);
                 readthread.Start();
-                System.Threading.Thread.Sleep(500);//等1秒讀取 1秒後顯示
+                System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示
                 //Refresh();//刷新圖片
                 readthread.Abort();//結束讀檔執行緒
             }
@@ -110,7 +110,7 @@ namespace dxftry
             if (zoomsize >= 110) zoomsize = 95;
         }
 
-        private void activepoint_Click(object sender, EventArgs e)
+        private void activepoint_Click(object sender, EventArgs e)//標點按鈕 按一下只能標一個點
         {
             if (active_point)
             {
@@ -206,12 +206,12 @@ namespace dxftry
                 label1.Text = label1.Text + "\n" + (s.X + e.X).ToString() + "\n" + (s.Y + e.Y).ToString();
             }
 
-            if (startrulerset)
+            if (startrulerset)//設比例尺
             {
                 if (c == 1) rulers = new Point(s.X + e.X, s.Y + e.Y);
                 if (c == 2) rulere = new Point(s.X + e.X, s.Y + e.Y);
                 c++;
-                if (c == 3)
+                if (c >= 3 && length_refer.Text != "" && length_refer.Text != "在此輸入長度")
                 {
                     length_refer.Visible = false;
                     startrulerset = false;
@@ -227,16 +227,12 @@ namespace dxftry
                 dxflines.Clear();
                 dxfcircles.Clear();
                 sizenum *= 1.5;
-                using (dxfpen = Graphics.FromImage(draw_dxf))
-                {
-                    dxfpen.Clear(Color.White);
-                }
                 string filepath = load.FileName;
                 readdxf = new StreamReader(filepath);
                 pre_readthread = new ThreadStart(showdxf);
                 readthread = new Thread(pre_readthread);
                 readthread.Start();
-                System.Threading.Thread.Sleep(500);//等1秒讀取 1秒後顯示
+                System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示
                 //Refresh();//刷新圖片
                 readthread.Abort();//結束讀檔執行緒                
             }
@@ -257,16 +253,12 @@ namespace dxftry
                 dxflines.Clear();
                 dxfcircles.Clear();
                 sizenum /= 1.5;
-                using (dxfpen = Graphics.FromImage(draw_dxf))
-                {
-                    dxfpen.Clear(Color.White);
-                }
                 string filepath = load.FileName;
                 readdxf = new StreamReader(filepath);
                 pre_readthread = new ThreadStart(showdxf);
                 readthread = new Thread(pre_readthread);
                 readthread.Start();
-                System.Threading.Thread.Sleep(500);//等1秒讀取 1秒後顯示
+                System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示
                 //Refresh();//刷新圖片
                 readthread.Abort();//結束讀檔執行緒                
             }
@@ -314,7 +306,7 @@ namespace dxftry
         {
             if (!set_size)
             {
-                DialogResult d= MessageBox.Show("確定後按鍵將不能縮放", "注意", MessageBoxButtons.OKCancel);
+                DialogResult d= MessageBox.Show("確定後按鍵將不能縮放\n右邊長度請記得輸入", "注意", MessageBoxButtons.OKCancel,MessageBoxIcon.Warning);
                 if (d == DialogResult.OK)
                 {
                     length_refer.Visible = true;
@@ -363,7 +355,12 @@ namespace dxftry
             icon1 = Image.FromFile("dot1.png");
             icon2 = Image.FromFile("dot2.png");//點滑鼠的圖
         }
-        
+
+        private void length_refer_MouseClick(object sender, MouseEventArgs e)
+        {
+            length_refer.Text = "";
+        }
+
         private void showdxf()
         {
             draw_dxf.Dispose();//關舊圖
@@ -541,7 +538,7 @@ namespace dxftry
             //pictureBox1.Location = new Point((this.Width - pictureBox1.Width) / 2, (this.Height - pictureBox1.Height) / 2);
         }
 
-        private void rulersetter()
+        private void rulersetter()//算單個像素距離
         {
             double l = Math.Sqrt((rulere.X - rulers.X) * (rulere.X - rulers.X) + (rulere.Y - rulers.Y) * (rulere.Y - rulers.Y));
             double lengthset = Convert.ToDouble(length_refer.Text);

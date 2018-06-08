@@ -263,7 +263,10 @@
             this.length_refer.Name = "length_refer";
             this.length_refer.Size = new System.Drawing.Size(200, 25);
             this.length_refer.TabIndex = 19;
+            this.length_refer.Text = "在此輸入長度";
+            this.length_refer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.length_refer.Visible = false;
+            this.length_refer.MouseClick += new System.Windows.Forms.MouseEventHandler(this.length_refer_MouseClick);
             // 
             // Form1
             // 

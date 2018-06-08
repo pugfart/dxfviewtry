@@ -16,3 +16,6 @@ C:\Users\andrew.hua\Desktop\dxftry\dxftry\obj\Debug\dxftry.csprojResolveAssembly
 C:\Users\andrew.hua\Desktop\dxftry\dxftry\obj\Debug\dxftry.Form1.resources
 C:\Users\andrew.hua\Desktop\dxftry\dxftry\obj\Debug\dxftry.Properties.Resources.resources
 C:\Users\andrew.hua\Desktop\dxftry\dxftry\obj\Debug\dxftry.csproj.GenerateResource.Cache
+E:\dxfviewtry\dxftry\dxftry\bin\Debug\dxftry.exe.config
+E:\dxfviewtry\dxftry\dxftry\obj\Debug\dxftry.exe
+E:\dxfviewtry\dxftry\dxftry\obj\Debug\dxftry.pdb
