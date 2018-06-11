@@ -148,6 +148,7 @@
             this.dot_place.MouseEnter += new System.EventHandler(this.dot_place_MouseEnter);
             this.dot_place.MouseLeave += new System.EventHandler(this.dot_place_MouseLeave);
             this.dot_place.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dot_place_MouseMove);
+            this.dot_place.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dot_place_MouseUp);
             // 
             // pointlight
             // 

@@ -25,9 +25,10 @@ namespace dxftry
         private ThreadStart pre_readthread;
         private Thread readthread;//讀檔執行緒
         private Int32 pointx, pointy, radius;//圓心 半徑
-        private bool set_size=false;
+        private bool set_size = false, mouse_move_pic = false;
         private double sizenum;//底圖縮放倍率
         private Point s;//看圖位置
+        private Point old;//滑鼠拖拉移動 紀錄一開始位置
         private double wheelzoom;//滾輪縮放
         private List<line> dxflines;
         private List<circle> dxfcircles;
@@ -46,7 +47,7 @@ namespace dxftry
         private Point rulers, rulere;
         private double pixellength;
         //滑鼠
-        private Image icon1, icon2;
+        private Image icon1, icon2, rock;
 
         public Form1()
         {
@@ -180,7 +181,7 @@ namespace dxftry
 
         private void dot_place_MouseClick(object sender, MouseEventArgs e)//標點
         {
-            if (active_point&&e.Button==MouseButtons.Left&&!active_zeropoint&&zero_exist)//普通標點
+            if (active_point && e.Button == MouseButtons.Left && !active_zeropoint && zero_exist)//普通標點
             {
                 pointarray[count] = new pointer(s.X + e.X, s.Y + e.Y, count);
                 draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Red);
@@ -195,7 +196,7 @@ namespace dxftry
                 pointlight.BackColor = Color.Red;
             }
 
-            else if(active_zeropoint)//零點標點
+            else if (active_zeropoint)//零點標點
             {
                 draw_dxf.SetPixel(zeropoint.X, zeropoint.Y, Color.White);
                 zeropoint = new Point(s.X + e.X, s.Y + e.Y);
@@ -298,8 +299,18 @@ namespace dxftry
 
         private void dot_place_MouseDown(object sender, MouseEventArgs e)
         {
-            Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
-            SetCursor(icon2, a, new Point(0, 0));
+            if (!active_point && !active_zeropoint && !startrulerset)
+            {
+                old = new Point(e.X, e.Y);
+                Bitmap a = (Bitmap)Bitmap.FromFile("rock.png");
+                SetCursor(rock, a, new Point(0, 0));
+                mouse_move_pic = true;
+            }
+            else
+            {
+                Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
+                SetCursor(icon2, a, new Point(0, 0));
+            }
         }
 
         private void setsize_Click(object sender, EventArgs e)
@@ -354,11 +365,23 @@ namespace dxftry
 
             icon1 = Image.FromFile("dot1.png");
             icon2 = Image.FromFile("dot2.png");//點滑鼠的圖
+            rock = Image.FromFile("rock.png");//拖拉時的手
         }
 
         private void length_refer_MouseClick(object sender, MouseEventArgs e)
         {
             length_refer.Text = "";
+        }
+
+        private void dot_place_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!active_point && !active_zeropoint && !startrulerset && mouse_move_pic)
+            {
+                s.X = s.X - e.X + old.X;
+                s.Y = s.Y - e.Y + old.Y;
+                dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
+                mouse_move_pic = false;
+            }
         }
 
         private void showdxf()
