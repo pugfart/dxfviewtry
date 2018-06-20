@@ -48,7 +48,12 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.measureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setScaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.a4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setZeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.squareCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoomminusbtn = new System.Windows.Forms.Button();
+            this.zoomplusbtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dxf_view)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zoombox)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -63,7 +68,7 @@
             this.dxf_view.Cursor = System.Windows.Forms.Cursors.Cross;
             this.dxf_view.Location = new System.Drawing.Point(12, 31);
             this.dxf_view.Name = "dxf_view";
-            this.dxf_view.Size = new System.Drawing.Size(1081, 641);
+            this.dxf_view.Size = new System.Drawing.Size(798, 603);
             this.dxf_view.TabIndex = 0;
             this.dxf_view.TabStop = false;
             this.dxf_view.Paint += new System.Windows.Forms.PaintEventHandler(this.dxf_view_Paint);
@@ -78,7 +83,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1117, 565);
+            this.label1.Location = new System.Drawing.Point(834, 565);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 3;
@@ -87,7 +92,7 @@
             // zoombox
             // 
             this.zoombox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoombox.Location = new System.Drawing.Point(1121, 123);
+            this.zoombox.Location = new System.Drawing.Point(838, 123);
             this.zoombox.Name = "zoombox";
             this.zoombox.Size = new System.Drawing.Size(200, 200);
             this.zoombox.TabIndex = 4;
@@ -97,7 +102,7 @@
             // 
             this.activepoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.activepoint.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.activepoint.Location = new System.Drawing.Point(1120, 330);
+            this.activepoint.Location = new System.Drawing.Point(837, 365);
             this.activepoint.Name = "activepoint";
             this.activepoint.Size = new System.Drawing.Size(200, 50);
             this.activepoint.TabIndex = 7;
@@ -109,7 +114,7 @@
             // 
             this.pointlight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pointlight.BackColor = System.Drawing.Color.Red;
-            this.pointlight.Location = new System.Drawing.Point(1120, 376);
+            this.pointlight.Location = new System.Drawing.Point(837, 411);
             this.pointlight.Name = "pointlight";
             this.pointlight.Size = new System.Drawing.Size(200, 3);
             this.pointlight.TabIndex = 9;
@@ -118,7 +123,7 @@
             // 
             this.picturebigger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.picturebigger.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.picturebigger.Location = new System.Drawing.Point(1043, 622);
+            this.picturebigger.Location = new System.Drawing.Point(760, 584);
             this.picturebigger.Name = "picturebigger";
             this.picturebigger.Size = new System.Drawing.Size(50, 50);
             this.picturebigger.TabIndex = 10;
@@ -130,7 +135,7 @@
             // 
             this.picturesmaller.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.picturesmaller.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.picturesmaller.Location = new System.Drawing.Point(992, 622);
+            this.picturesmaller.Location = new System.Drawing.Point(709, 584);
             this.picturesmaller.Name = "picturesmaller";
             this.picturesmaller.Size = new System.Drawing.Size(50, 50);
             this.picturesmaller.TabIndex = 11;
@@ -142,7 +147,7 @@
             // 
             this.moveup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveup.Image = ((System.Drawing.Image)(resources.GetObject("moveup.Image")));
-            this.moveup.Location = new System.Drawing.Point(1190, 36);
+            this.moveup.Location = new System.Drawing.Point(907, 36);
             this.moveup.Name = "moveup";
             this.moveup.Size = new System.Drawing.Size(65, 40);
             this.moveup.TabIndex = 13;
@@ -153,7 +158,7 @@
             // 
             this.movedown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.movedown.Image = ((System.Drawing.Image)(resources.GetObject("movedown.Image")));
-            this.movedown.Location = new System.Drawing.Point(1190, 77);
+            this.movedown.Location = new System.Drawing.Point(907, 77);
             this.movedown.Name = "movedown";
             this.movedown.Size = new System.Drawing.Size(65, 40);
             this.movedown.TabIndex = 14;
@@ -164,7 +169,7 @@
             // 
             this.moveleft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveleft.Image = ((System.Drawing.Image)(resources.GetObject("moveleft.Image")));
-            this.moveleft.Location = new System.Drawing.Point(1123, 55);
+            this.moveleft.Location = new System.Drawing.Point(840, 55);
             this.moveleft.Name = "moveleft";
             this.moveleft.Size = new System.Drawing.Size(65, 40);
             this.moveleft.TabIndex = 15;
@@ -175,7 +180,7 @@
             // 
             this.moveright.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moveright.Image = ((System.Drawing.Image)(resources.GetObject("moveright.Image")));
-            this.moveright.Location = new System.Drawing.Point(1257, 55);
+            this.moveright.Location = new System.Drawing.Point(974, 55);
             this.moveright.Name = "moveright";
             this.moveright.Size = new System.Drawing.Size(65, 40);
             this.moveright.TabIndex = 16;
@@ -186,7 +191,7 @@
             // 
             this.dataname.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dataname.AutoSize = true;
-            this.dataname.Location = new System.Drawing.Point(12, 687);
+            this.dataname.Location = new System.Drawing.Point(12, 649);
             this.dataname.Name = "dataname";
             this.dataname.Size = new System.Drawing.Size(67, 15);
             this.dataname.TabIndex = 18;
@@ -195,7 +200,7 @@
             // length_refer
             // 
             this.length_refer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.length_refer.Location = new System.Drawing.Point(971, 647);
+            this.length_refer.Location = new System.Drawing.Point(688, 609);
             this.length_refer.Name = "length_refer";
             this.length_refer.Size = new System.Drawing.Size(122, 25);
             this.length_refer.TabIndex = 19;
@@ -208,7 +213,7 @@
             // 
             this.zoomsizenum.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.zoomsizenum.BackColor = System.Drawing.Color.White;
-            this.zoomsizenum.Location = new System.Drawing.Point(1037, 31);
+            this.zoomsizenum.Location = new System.Drawing.Point(754, 31);
             this.zoomsizenum.Name = "zoomsizenum";
             this.zoomsizenum.Size = new System.Drawing.Size(56, 16);
             this.zoomsizenum.TabIndex = 20;
@@ -222,7 +227,7 @@
             this.measureToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1345, 27);
+            this.menuStrip1.Size = new System.Drawing.Size(1062, 27);
             this.menuStrip1.TabIndex = 21;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -245,30 +250,78 @@
             // 
             this.measureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setScaleToolStripMenuItem,
-            this.setZeroToolStripMenuItem});
+            this.setZeroToolStripMenuItem,
+            this.squareCenterToolStripMenuItem});
             this.measureToolStripMenuItem.Name = "measureToolStripMenuItem";
             this.measureToolStripMenuItem.Size = new System.Drawing.Size(81, 23);
             this.measureToolStripMenuItem.Text = "Measure";
             // 
             // setScaleToolStripMenuItem
             // 
+            this.setScaleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.a4ToolStripMenuItem,
+            this.otherToolStripMenuItem});
             this.setScaleToolStripMenuItem.Name = "setScaleToolStripMenuItem";
-            this.setScaleToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
+            this.setScaleToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
             this.setScaleToolStripMenuItem.Text = "Set scale";
-            this.setScaleToolStripMenuItem.Click += new System.EventHandler(this.setScaleToolStripMenuItem_Click);
+            // 
+            // a4ToolStripMenuItem
+            // 
+            this.a4ToolStripMenuItem.Name = "a4ToolStripMenuItem";
+            this.a4ToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.a4ToolStripMenuItem.Text = "A4";
+            this.a4ToolStripMenuItem.Click += new System.EventHandler(this.a4ToolStripMenuItem_Click);
+            // 
+            // otherToolStripMenuItem
+            // 
+            this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
+            this.otherToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.otherToolStripMenuItem.Text = "Other";
+            this.otherToolStripMenuItem.Click += new System.EventHandler(this.otherToolStripMenuItem_Click);
             // 
             // setZeroToolStripMenuItem
             // 
             this.setZeroToolStripMenuItem.Name = "setZeroToolStripMenuItem";
-            this.setZeroToolStripMenuItem.Size = new System.Drawing.Size(144, 26);
+            this.setZeroToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
             this.setZeroToolStripMenuItem.Text = "Set Zero";
             this.setZeroToolStripMenuItem.Click += new System.EventHandler(this.setZeroToolStripMenuItem_Click);
+            // 
+            // squareCenterToolStripMenuItem
+            // 
+            this.squareCenterToolStripMenuItem.Name = "squareCenterToolStripMenuItem";
+            this.squareCenterToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.squareCenterToolStripMenuItem.Text = "Square Center";
+            this.squareCenterToolStripMenuItem.Click += new System.EventHandler(this.squareCenterToolStripMenuItem_Click);
+            // 
+            // zoomminusbtn
+            // 
+            this.zoomminusbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomminusbtn.Location = new System.Drawing.Point(837, 330);
+            this.zoomminusbtn.Name = "zoomminusbtn";
+            this.zoomminusbtn.Size = new System.Drawing.Size(95, 30);
+            this.zoomminusbtn.TabIndex = 23;
+            this.zoomminusbtn.Text = "-";
+            this.zoomminusbtn.UseVisualStyleBackColor = true;
+            this.zoomminusbtn.Click += new System.EventHandler(this.zoomminusbtn_Click);
+            // 
+            // zoomplusbtn
+            // 
+            this.zoomplusbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomplusbtn.Location = new System.Drawing.Point(942, 330);
+            this.zoomplusbtn.Name = "zoomplusbtn";
+            this.zoomplusbtn.Size = new System.Drawing.Size(95, 30);
+            this.zoomplusbtn.TabIndex = 24;
+            this.zoomplusbtn.Text = "+";
+            this.zoomplusbtn.UseVisualStyleBackColor = true;
+            this.zoomplusbtn.Click += new System.EventHandler(this.zoomplusbtn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1345, 711);
+            this.ClientSize = new System.Drawing.Size(1062, 673);
+            this.Controls.Add(this.zoomplusbtn);
+            this.Controls.Add(this.zoomminusbtn);
             this.Controls.Add(this.zoomsizenum);
             this.Controls.Add(this.length_refer);
             this.Controls.Add(this.dataname);
@@ -323,6 +376,11 @@
         private System.Windows.Forms.ToolStripMenuItem measureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setScaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setZeroToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem squareCenterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem a4ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
+        private System.Windows.Forms.Button zoomminusbtn;
+        private System.Windows.Forms.Button zoomplusbtn;
     }
 }
 
