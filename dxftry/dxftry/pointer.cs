@@ -18,12 +18,26 @@ namespace dxftry
         public pointer()
         {
             location = new Point();
+
+            ori_x = -1;
+            ori_y = -1;
         }
 
         public pointer(Int32 x,Int32 y,Int32 No)
         {
             location = new Point(x, y);
             number = No;
+
+            ori_x = -1;
+            ori_y = -1;
+        }
+
+        public pointer(double x,double y,int no)
+        {
+            ori_x = x;
+            ori_y = y;
+            number = no;
+            location = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
         }
 
         public void movepoint(Int32 x,Int32 y)
@@ -34,9 +48,19 @@ namespace dxftry
 
         public void sizechange(double sizenumber)
         {
-            location.X = Convert.ToInt32(location.X * sizenumber);
-            location.Y = Convert.ToInt32(location.Y * sizenumber);
+            if (ori_x >= 0 && ori_y >= 0)
+            {
+                ori_x *= sizenumber;
+                ori_y *= sizenumber;
 
+                location.X = Convert.ToInt32(ori_x);
+                location.Y = Convert.ToInt32(ori_x);
+            }
+            else
+            {
+                location.X = Convert.ToInt32(location.X * sizenumber);
+                location.Y = Convert.ToInt32(location.Y * sizenumber);
+            }
         }
     }
 }

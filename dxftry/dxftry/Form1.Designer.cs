@@ -31,15 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dxf_view = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.zoombox = new System.Windows.Forms.PictureBox();
-            this.activepoint = new System.Windows.Forms.Button();
-            this.pointlight = new System.Windows.Forms.Label();
             this.picturebigger = new System.Windows.Forms.Button();
             this.picturesmaller = new System.Windows.Forms.Button();
-            this.moveup = new System.Windows.Forms.Button();
-            this.movedown = new System.Windows.Forms.Button();
-            this.moveleft = new System.Windows.Forms.Button();
-            this.moveright = new System.Windows.Forms.Button();
             this.dataname = new System.Windows.Forms.Label();
             this.length_refer = new System.Windows.Forms.TextBox();
             this.zoomsizenum = new System.Windows.Forms.Label();
@@ -52,11 +45,14 @@
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setZeroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squareCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomminusbtn = new System.Windows.Forms.Button();
-            this.zoomplusbtn = new System.Windows.Forms.Button();
+            this.pointdata = new System.Windows.Forms.DataGridView();
+            this.NO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.number_label = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dxf_view)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.zoombox)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pointdata)).BeginInit();
             this.SuspendLayout();
             // 
             // dxf_view
@@ -71,7 +67,6 @@
             this.dxf_view.Size = new System.Drawing.Size(798, 603);
             this.dxf_view.TabIndex = 0;
             this.dxf_view.TabStop = false;
-            this.dxf_view.Paint += new System.Windows.Forms.PaintEventHandler(this.dxf_view_Paint);
             this.dxf_view.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dxf_view_MouseClick);
             this.dxf_view.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dxf_view_MouseDown);
             this.dxf_view.MouseEnter += new System.EventHandler(this.dxf_view_MouseEnter);
@@ -88,36 +83,6 @@
             this.label1.Size = new System.Drawing.Size(52, 15);
             this.label1.TabIndex = 3;
             this.label1.Text = "測試用";
-            // 
-            // zoombox
-            // 
-            this.zoombox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoombox.Location = new System.Drawing.Point(838, 123);
-            this.zoombox.Name = "zoombox";
-            this.zoombox.Size = new System.Drawing.Size(200, 200);
-            this.zoombox.TabIndex = 4;
-            this.zoombox.TabStop = false;
-            // 
-            // activepoint
-            // 
-            this.activepoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.activepoint.Font = new System.Drawing.Font("微軟正黑體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.activepoint.Location = new System.Drawing.Point(837, 365);
-            this.activepoint.Name = "activepoint";
-            this.activepoint.Size = new System.Drawing.Size(200, 50);
-            this.activepoint.TabIndex = 7;
-            this.activepoint.Text = "標點";
-            this.activepoint.UseVisualStyleBackColor = true;
-            this.activepoint.Click += new System.EventHandler(this.activepoint_Click);
-            // 
-            // pointlight
-            // 
-            this.pointlight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pointlight.BackColor = System.Drawing.Color.Red;
-            this.pointlight.Location = new System.Drawing.Point(837, 411);
-            this.pointlight.Name = "pointlight";
-            this.pointlight.Size = new System.Drawing.Size(200, 3);
-            this.pointlight.TabIndex = 9;
             // 
             // picturebigger
             // 
@@ -142,50 +107,6 @@
             this.picturesmaller.Text = "-";
             this.picturesmaller.UseVisualStyleBackColor = true;
             this.picturesmaller.Click += new System.EventHandler(this.picturesmaller_Click);
-            // 
-            // moveup
-            // 
-            this.moveup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.moveup.Image = ((System.Drawing.Image)(resources.GetObject("moveup.Image")));
-            this.moveup.Location = new System.Drawing.Point(907, 36);
-            this.moveup.Name = "moveup";
-            this.moveup.Size = new System.Drawing.Size(65, 40);
-            this.moveup.TabIndex = 13;
-            this.moveup.UseVisualStyleBackColor = true;
-            this.moveup.Click += new System.EventHandler(this.moveup_Click);
-            // 
-            // movedown
-            // 
-            this.movedown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.movedown.Image = ((System.Drawing.Image)(resources.GetObject("movedown.Image")));
-            this.movedown.Location = new System.Drawing.Point(907, 77);
-            this.movedown.Name = "movedown";
-            this.movedown.Size = new System.Drawing.Size(65, 40);
-            this.movedown.TabIndex = 14;
-            this.movedown.UseVisualStyleBackColor = true;
-            this.movedown.Click += new System.EventHandler(this.movedown_Click);
-            // 
-            // moveleft
-            // 
-            this.moveleft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.moveleft.Image = ((System.Drawing.Image)(resources.GetObject("moveleft.Image")));
-            this.moveleft.Location = new System.Drawing.Point(840, 55);
-            this.moveleft.Name = "moveleft";
-            this.moveleft.Size = new System.Drawing.Size(65, 40);
-            this.moveleft.TabIndex = 15;
-            this.moveleft.UseVisualStyleBackColor = true;
-            this.moveleft.Click += new System.EventHandler(this.moveleft_Click);
-            // 
-            // moveright
-            // 
-            this.moveright.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.moveright.Image = ((System.Drawing.Image)(resources.GetObject("moveright.Image")));
-            this.moveright.Location = new System.Drawing.Point(974, 55);
-            this.moveright.Name = "moveright";
-            this.moveright.Size = new System.Drawing.Size(65, 40);
-            this.moveright.TabIndex = 16;
-            this.moveright.UseVisualStyleBackColor = true;
-            this.moveright.Click += new System.EventHandler(this.moveright_Click);
             // 
             // dataname
             // 
@@ -293,47 +214,61 @@
             this.squareCenterToolStripMenuItem.Text = "Square Center";
             this.squareCenterToolStripMenuItem.Click += new System.EventHandler(this.squareCenterToolStripMenuItem_Click);
             // 
-            // zoomminusbtn
+            // pointdata
             // 
-            this.zoomminusbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomminusbtn.Location = new System.Drawing.Point(837, 330);
-            this.zoomminusbtn.Name = "zoomminusbtn";
-            this.zoomminusbtn.Size = new System.Drawing.Size(95, 30);
-            this.zoomminusbtn.TabIndex = 23;
-            this.zoomminusbtn.Text = "-";
-            this.zoomminusbtn.UseVisualStyleBackColor = true;
-            this.zoomminusbtn.Click += new System.EventHandler(this.zoomminusbtn_Click);
+            this.pointdata.AllowUserToOrderColumns = true;
+            this.pointdata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pointdata.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.pointdata.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.NO,
+            this.X,
+            this.Y});
+            this.pointdata.Location = new System.Drawing.Point(822, 31);
+            this.pointdata.Name = "pointdata";
+            this.pointdata.RowTemplate.Height = 27;
+            this.pointdata.Size = new System.Drawing.Size(228, 292);
+            this.pointdata.TabIndex = 22;
+            this.pointdata.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.pointdata_RowHeaderMouseDoubleClick);
             // 
-            // zoomplusbtn
+            // NO
             // 
-            this.zoomplusbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.zoomplusbtn.Location = new System.Drawing.Point(942, 330);
-            this.zoomplusbtn.Name = "zoomplusbtn";
-            this.zoomplusbtn.Size = new System.Drawing.Size(95, 30);
-            this.zoomplusbtn.TabIndex = 24;
-            this.zoomplusbtn.Text = "+";
-            this.zoomplusbtn.UseVisualStyleBackColor = true;
-            this.zoomplusbtn.Click += new System.EventHandler(this.zoomplusbtn_Click);
+            this.NO.HeaderText = "NO";
+            this.NO.Name = "NO";
+            this.NO.Width = 25;
+            // 
+            // X
+            // 
+            this.X.HeaderText = "X";
+            this.X.Name = "X";
+            this.X.Width = 50;
+            // 
+            // Y
+            // 
+            this.Y.HeaderText = "Y";
+            this.Y.Name = "Y";
+            this.Y.Width = 50;
+            // 
+            // number_label
+            // 
+            this.number_label.AutoSize = true;
+            this.number_label.Location = new System.Drawing.Point(849, 344);
+            this.number_label.Name = "number_label";
+            this.number_label.Size = new System.Drawing.Size(41, 15);
+            this.number_label.TabIndex = 23;
+            this.number_label.Text = "label2";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1062, 673);
-            this.Controls.Add(this.zoomplusbtn);
-            this.Controls.Add(this.zoomminusbtn);
+            this.Controls.Add(this.number_label);
+            this.Controls.Add(this.pointdata);
             this.Controls.Add(this.zoomsizenum);
             this.Controls.Add(this.length_refer);
             this.Controls.Add(this.dataname);
-            this.Controls.Add(this.moveright);
-            this.Controls.Add(this.moveleft);
-            this.Controls.Add(this.movedown);
-            this.Controls.Add(this.moveup);
             this.Controls.Add(this.picturesmaller);
             this.Controls.Add(this.picturebigger);
-            this.Controls.Add(this.pointlight);
-            this.Controls.Add(this.activepoint);
-            this.Controls.Add(this.zoombox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dxf_view);
             this.Controls.Add(this.menuStrip1);
@@ -343,12 +278,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CommonRobotPointerInterface";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dxf_view)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.zoombox)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pointdata)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -358,15 +292,8 @@
 
         private System.Windows.Forms.PictureBox dxf_view;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox zoombox;
-        private System.Windows.Forms.Button activepoint;
-        private System.Windows.Forms.Label pointlight;
         private System.Windows.Forms.Button picturebigger;
         private System.Windows.Forms.Button picturesmaller;
-        private System.Windows.Forms.Button moveup;
-        private System.Windows.Forms.Button movedown;
-        private System.Windows.Forms.Button moveleft;
-        private System.Windows.Forms.Button moveright;
         private System.Windows.Forms.Label dataname;
         private System.Windows.Forms.TextBox length_refer;
         private System.Windows.Forms.Label zoomsizenum;
@@ -379,8 +306,11 @@
         private System.Windows.Forms.ToolStripMenuItem squareCenterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem a4ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
-        private System.Windows.Forms.Button zoomminusbtn;
-        private System.Windows.Forms.Button zoomplusbtn;
+        private System.Windows.Forms.DataGridView pointdata;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NO;
+        private System.Windows.Forms.DataGridViewTextBoxColumn X;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Y;
+        private System.Windows.Forms.Label number_label;
     }
 }
 

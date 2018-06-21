@@ -32,15 +32,8 @@ namespace dxftry
         private List<line> dxflines;//線 資料
         private List<circle> dxfcircles;//圓 資料
         private List<text> dxftext;//文字 數字 資料
-        //放大鏡
-        private bool blIsDrawRectangle = true;
-        private Point ptBegin = new Point();
-        private Thread thDraw;
-        private delegate void myDrawRectangel();
-        private myDrawRectangel myDraw;
-        private Int32 zoomsize;//放大鏡大小
         //標點
-        private bool active_point = false, active_zeropoint = false, zero_exist = false, startrulerset = false, ruler_exist = false;//可以標點? 可以標零點? 零點存在? 設比例尺? 比例尺存在?
+        private bool active_zeropoint = false, zero_exist = false, startrulerset = false, ruler_exist = false;//可以標點? 可以標零點? 零點存在? 設比例尺? 比例尺存在?
         private pointer[] pointarray;//標點資料
         private Int32 count,c;//標點號碼 比例尺設定用
         private originpoint zeropoint;//原點
@@ -63,43 +56,8 @@ namespace dxftry
             line2 = readdxf.ReadLine();         
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)//關視窗時 關放大鏡執行緒
-        {
-            thDraw.Abort();
-        }
-
-        private void activepoint_Click(object sender, EventArgs e)//標點按鈕 按一下只能標一個點
-        {
-            if (active_point)
-            {
-                active_point = false;
-                pointlight.BackColor = Color.Red;//紅色表不標點
-                count--;
-            }
-            else
-            {
-                active_point = true;
-                pointlight.BackColor = Color.Green;//綠色表可標點
-                count++;
-            }
-        }
-
         private void picturebigger_Click(object sender, EventArgs e)
         {
-            /*dxflines.Clear();
-            dxfcircles.Clear();
-            dxftext.Clear();
-            sizenum *= 1.5;
-            zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";
-            string filepath = load.FileName;
-            readdxf = new StreamReader(filepath);
-            pre_readthread = new ThreadStart(showdxf);
-            readthread = new Thread(pre_readthread);
-            readthread.Start();
-            System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示
-                                               //Refresh();//刷新圖片
-            readthread.Abort();//結束讀檔執行緒 */
-
             sizenum *= 1.5;
             zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";
             draw_dxf.Dispose();//關舊圖
@@ -126,6 +84,11 @@ namespace dxftry
             {
                 cc.sizechange(1.5);
                 cc.draw(draw_dxf);
+            }
+
+            for (int i = 0; i >= count; i++)
+            {
+                pointarray[i].sizechange(1.5);
             }
 
             double x = s.X * 1.5;//放大後位置校準
@@ -173,6 +136,11 @@ namespace dxftry
                 cc.draw(draw_dxf);
             }
 
+            for (int i = 0; i >= count; i++)
+            {
+                pointarray[i].sizechange(1/1.5);
+            }
+
             double x = s.X / 1.5;//縮小後位置校準
             double y = s.Y / 1.5;
             s.X = Convert.ToInt32(x);
@@ -186,30 +154,6 @@ namespace dxftry
             {
                 zeropoint.sizechange(1 / 1.5);
             }
-        }
-
-        private void moveup_Click(object sender, EventArgs e)
-        {
-            s.Y += 50;
-            dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
-        }
-
-        private void movedown_Click(object sender, EventArgs e)
-        {
-            s.Y -= 50;
-            dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
-        }
-
-        private void moveleft_Click(object sender, EventArgs e)
-        {
-            s.X += 50;
-            dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
-        }
-
-        private void moveright_Click(object sender, EventArgs e)
-        {
-            s.X -= 50;
-            dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -235,9 +179,13 @@ namespace dxftry
                 readthread.Abort();//結束讀檔執行緒
             }
 
+            pointdata.Rows.Clear();
+            Array.Clear(pointarray, 0, count);
+
             ruler_exist = false;
             dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
             count = 0;
+            zoomsizenum.Text = sizenum.ToString() + "*";
         }
 
         private void setZeroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -248,8 +196,10 @@ namespace dxftry
 
         private void dxf_view_MouseClick(object sender, MouseEventArgs e)
         {
-            if (active_point && e.Button == MouseButtons.Left && !active_zeropoint && zero_exist && ruler_exist)//普通標點
+            DataGridViewRowCollection pdata = pointdata.Rows;
+            if (e.Button == MouseButtons.Right && !active_zeropoint && zero_exist && ruler_exist)//普通標點
             {
+                count++;
                 pointarray[count] = new pointer(s.X + e.X, s.Y + e.Y, count);
                 draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Red);
                 pointarray[count].x_to_zero = pointer_x_to_zero(pointarray[count]);
@@ -259,14 +209,13 @@ namespace dxftry
                 pointarray[count].ori_x = ori_lock_x;
                 pointarray[count].ori_y = ori_lock_y;
                 dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
-                
-                label1.Text = label1.Text + "\n" + pointarray[count].x_to_zero_dou.ToString() + "\n" + pointarray[count].y_to_zero_dou.ToString() + "\n" + count.ToString();
 
-                active_point = false;
-                pointlight.BackColor = Color.Red;
+                pdata.Add(new object[] { pointarray[count].number.ToString(), pointarray[count].x_to_zero_dou.ToString(), pointarray[count].y_to_zero_dou.ToString() });
+
+                label1.Text = label1.Text + "\n" + pointarray[count].x_to_zero_dou.ToString() + "\n" + pointarray[count].y_to_zero_dou.ToString() + "\n" + count.ToString();
             }
 
-            else if (active_zeropoint && ruler_exist && e.Button == MouseButtons.Left)//零點標點
+            else if (active_zeropoint && ruler_exist && e.Button == MouseButtons.Right)//零點標點
             {
                 if (zero_exist)
                     draw_dxf.SetPixel(zeropoint.drawpoint.X, zeropoint.drawpoint.Y, Color.White);
@@ -280,7 +229,7 @@ namespace dxftry
                 label1.Text = label1.Text + "\n" + zeropoint.drawpoint.X.ToString() + "\n" + zeropoint.drawpoint.Y.ToString();
             }
 
-            if (startrulerset && e.Button == MouseButtons.Left)//設比例尺
+            if (startrulerset && e.Button == MouseButtons.Right)//設比例尺
             {
                 if (c == 1) rulers = new Point(s.X + e.X, s.Y + e.Y);
                 if (c == 2) rulere = new Point(s.X + e.X, s.Y + e.Y);
@@ -297,67 +246,53 @@ namespace dxftry
 
         private void dxf_view_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!active_point && !active_zeropoint && !startrulerset)
-            {
-                old = new Point(e.X, e.Y);
-                Bitmap a = (Bitmap)Bitmap.FromFile("rock.png");
-                SetCursor(rock, a, new Point(0, 0));
-                mouse_move_pic = true;
-            }
-            else
-            {
-                Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
-                SetCursor(icon2, a, new Point(0, 0));
-            }
+            if (!active_zeropoint)
+                if (e.Button == MouseButtons.Left)
+                {
+                    old = new Point(e.X, e.Y);
+                    Bitmap a = (Bitmap)Bitmap.FromFile("rock.png");
+                    SetCursor(rock, a, new Point(0, 0));
+                    mouse_move_pic = true;
+                }
+                else
+                {
+                    Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
+                    SetCursor(icon2, a, new Point(0, 0));
+                }
         }
 
         private void dxf_view_MouseEnter(object sender, EventArgs e)
         {
-            blIsDrawRectangle = true;
             dxf_view.Focus();
         }
 
         private void dxf_view_MouseLeave(object sender, EventArgs e)
         {
-            blIsDrawRectangle = false;
             dxf_view.Refresh();
 
             this.Cursor = Cursors.Default;
         }
 
+        private void pointdata_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int rowindex = Convert.ToInt32(pointdata.Rows[e.RowIndex].Cells[0].Value);
+            number_label.Text = pointarray[rowindex].number.ToString();
+            int x, y;
+            x = pointarray[rowindex].location.X - s.X;
+            y = pointarray[rowindex].location.Y - s.Y;
+
+            if (x >= 0 && y >= 0)
+            {
+                number_label.Visible = true;
+                number_label.Location = new Point(x + dxf_view.Location.X, y + dxf_view.Location.Y);
+            }
+            else
+                number_label.Visible = false;
+        }
+
         private void dxf_view_MouseMove(object sender, MouseEventArgs e)
         {
-            //if (e.X - 25 <= 0)
-            if (e.X - zoomsize / 2 <= 0)
-            {
-                ptBegin.X = 0;
-            }
-            else if (dxf_view.Width - e.X <= zoomsize / 2)  //25
-            {
-                ptBegin.X = dxf_view.Width - zoomsize;  //50
-                                                         // ptBegin.X = pictureBox1.Size.Width - 1;
-            }
-            else
-            {
-                ptBegin.X = e.X - zoomsize / 2; //25
-            }
-            if (e.Y - zoomsize / 2 <= 0)  //25
-            {
-                ptBegin.Y = 0;
-            }
-            else if (dxf_view.Height - e.Y <= zoomsize / 2)  //25
-            {
-                ptBegin.Y = dxf_view.Height - zoomsize;  //50
-                //ptBegin.X = pictureBox1.Size.Width - 10;
-            }
-            else
-            {
-                ptBegin.Y = e.Y - zoomsize / 2;  //25
-            }
-            dxf_view.Refresh();
-
-
-            Control control = (Control)sender;//鎖點掃描 以下
+            Control control = (Control)sender;//鎖點掃描
             Form f = new Form();
             this.Cursor = new Cursor(Cursor.Current.Handle);
             Point mousep;
@@ -412,20 +347,6 @@ namespace dxftry
 
         }
 
-        private void zoomplusbtn_Click(object sender, EventArgs e)
-        {            
-            zoomsize -= 15;
-            if (zoomsize <= 0) zoomsize = 5;
-            dxf_view.Refresh();
-        }
-
-        private void zoomminusbtn_Click(object sender, EventArgs e)
-        {
-            zoomsize += 15;
-            if (zoomsize >= 110) zoomsize = 95;
-            dxf_view.Refresh();
-        }
-
         private void a4ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pixellength = 1/sizenum;
@@ -445,26 +366,27 @@ namespace dxftry
 
         private void dxf_view_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!active_point && !active_zeropoint && !startrulerset && mouse_move_pic)
+            if (number_label.Visible)
+            {
+                if (number_label.Location.X - dxf_view.Location.X + (e.X - old.X) >= 0 && number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) >= 0)
+                    number_label.Location = new Point(number_label.Location.X + (e.X - old.X), number_label.Location.Y + (e.Y - old.Y));
+                else
+                    number_label.Visible = false;
+            }
+
+            if (!active_zeropoint && !startrulerset && mouse_move_pic)
             {
                 s.X = s.X - e.X + old.X;
                 s.Y = s.Y - e.Y + old.Y;
                 dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
                 mouse_move_pic = false;
-            }
-        }
-
-        private void dxf_view_Paint(object sender, PaintEventArgs e)
-        {
-            if (blIsDrawRectangle)
-            {
-                e.Graphics.DrawRectangle(new Pen(Brushes.Black, 1), ptBegin.X, ptBegin.Y, zoomsize, zoomsize);    //黑色移動框大小(初始50*50) 隨放大率改變
-            }
+            }            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            zoomsize = 50;//大小初值
+            number_label.Visible = false;//一開始 點位數字不會顯示
+            
             blackpen = new Pen(Color.Black);//用黑線畫dxf
             blackpen.Width = 1;
             draw_dxf = new Bitmap(dxf_view.Width, dxf_view.Height);//先在bitmap畫
@@ -473,13 +395,8 @@ namespace dxftry
                 dxfpen.Clear(Color.White);//底色 白
             }
             dxf_view.Image = draw_dxf;//刷新
-            //開始放大鏡執行續
-            myDraw = new myDrawRectangel(ShowDrawRectangle);
-            thDraw = new Thread(Run);
-            thDraw.Start();
 
-            active_point = false;
-            count = 1;
+            count = 0;
             pointarray = new pointer[10];
             this.dxf_view.BackColor = Color.Transparent;
 
@@ -493,8 +410,6 @@ namespace dxftry
             icon1 = Image.FromFile("dot1.png");
             icon2 = Image.FromFile("dot2.png");//點滑鼠的圖
             rock = Image.FromFile("rock.png");//拖拉時的手
-
-            this.moveup.BackColor = Color.Transparent;
         }
 
         private void length_refer_MouseClick(object sender, MouseEventArgs e)
@@ -622,28 +537,6 @@ namespace dxftry
 
             dxf_view.Image = draw_dxf;            
         }
-
-        private void ShowDrawRectangle() // 底圖
-        {
-            Rectangle rec = new Rectangle(ptBegin.X, ptBegin.Y, zoomsize, zoomsize);
-            Graphics g = zoombox.CreateGraphics();
-            g.DrawImage(dxf_view.Image, zoombox.ClientRectangle, rec, GraphicsUnit.Pixel);
-            g.DrawLine(Pens.SteelBlue, zoombox.Width/2, 0, zoombox.Width/2, zoombox.Height);
-            g.DrawLine(Pens.SteelBlue, 0, zoombox.Height/2, zoombox.Width, zoombox.Height/2);
-            g.Flush();
-        }
-
-        private void Run()
-        {
-            while (true)
-            {
-                if (dxf_view.Image != null)
-                {
-                    this.BeginInvoke(myDraw);
-                }
-                Thread.Sleep(10);
-            }
-        } // init
         
         private Image cut(Point s, int width, int height)//看部分dxf
         {
@@ -699,6 +592,11 @@ namespace dxftry
                     cc.draw(draw_dxf);
                 }
 
+                for (int i = 0; i >= count; i++)
+                {
+                    pointarray[i].sizechange(1.2);
+                }
+
                 double x = s.X * 1.2;//放大後位置校準
                 double y = s.Y * 1.2;
                 s.X = Convert.ToInt32(x);
@@ -741,6 +639,11 @@ namespace dxftry
                 {
                     cc.sizechange(1 / 1.2);
                     cc.draw(draw_dxf);
+                }
+
+                for (int i = 0; i >= count; i++)
+                {
+                    pointarray[i].sizechange(1/1.2);
                 }
 
                 double x = s.X / 1.2;//縮小後位置校準
