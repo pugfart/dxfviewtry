@@ -11,8 +11,8 @@ namespace dxftry
     {
         public Point drawpoint;
         public double ori_x, ori_y;
-        public bool lockpoint = false;
 
+        #region build
         public originpoint()
         {
             ori_x = -1;
@@ -36,7 +36,7 @@ namespace dxftry
 
             drawpoint = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
         }
-
+        #endregion
 
         public void sizechange(double changenum)
         {

@@ -91,6 +91,8 @@ namespace dxftry
                 pointarray[i].sizechange(1.5);
             }
 
+            number_label.Location = new Point(Convert.ToInt32(number_label.Location.X * 1.5), Convert.ToInt32(number_label.Location.Y * 1.5));
+
             double x = s.X * 1.5;//放大後位置校準
             double y = s.Y * 1.5;
             s.X = Convert.ToInt32(x);
@@ -140,6 +142,8 @@ namespace dxftry
             {
                 pointarray[i].sizechange(1/1.5);
             }
+
+            number_label.Location = new Point(Convert.ToInt32(number_label.Location.X / 1.5), Convert.ToInt32(number_label.Location.Y / 1.5));
 
             double x = s.X / 1.5;//縮小後位置校準
             double y = s.Y / 1.5;
@@ -200,14 +204,15 @@ namespace dxftry
             if (e.Button == MouseButtons.Right && !active_zeropoint && zero_exist && ruler_exist)//普通標點
             {
                 count++;
-                pointarray[count] = new pointer(s.X + e.X, s.Y + e.Y, count);
+                pointarray[count] = new pointer(s.X + e.X, s.Y + e.Y, count);//用dxf_view座標與滑鼠座標算出該像素在bitmap位置
                 draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Red);
-                pointarray[count].x_to_zero = pointer_x_to_zero(pointarray[count]);
+                pointarray[count].x_to_zero = pointer_x_to_zero(pointarray[count]);//與原點距離 單位:像素
                 pointarray[count].y_to_zero = pointer_y_to_zero(pointarray[count]);
-                pointarray[count].x_to_zero_dou = pointarray[count].x_to_zero * pixellength;
+                pointarray[count].x_to_zero_dou = pointarray[count].x_to_zero * pixellength;//用比例尺算與原點距離
                 pointarray[count].y_to_zero_dou = pointarray[count].y_to_zero * pixellength;
-                pointarray[count].ori_x = ori_lock_x;
+                pointarray[count].ori_x = ori_lock_x;//最近一次的鎖點資料 如標在非鎖點的地方會有錯誤
                 pointarray[count].ori_y = ori_lock_y;
+                pointarray[count].sizenum = sizenum;//標點時的縮放倍率
                 dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
 
                 pdata.Add(new object[] { pointarray[count].number.ToString(), pointarray[count].x_to_zero_dou.ToString(), pointarray[count].y_to_zero_dou.ToString() });
@@ -217,7 +222,7 @@ namespace dxftry
 
             else if (active_zeropoint && ruler_exist && e.Button == MouseButtons.Right)//零點標點
             {
-                if (zero_exist)
+                if (zero_exist)//如有上個原點 將其變回白色
                     draw_dxf.SetPixel(zeropoint.drawpoint.X, zeropoint.drawpoint.Y, Color.White);
                 zeropoint = new originpoint(new Point(s.X + e.X, s.Y + e.Y));
                 draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Blue);
@@ -246,19 +251,18 @@ namespace dxftry
 
         private void dxf_view_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!active_zeropoint)
-                if (e.Button == MouseButtons.Left)
-                {
-                    old = new Point(e.X, e.Y);
-                    Bitmap a = (Bitmap)Bitmap.FromFile("rock.png");
-                    SetCursor(rock, a, new Point(0, 0));
-                    mouse_move_pic = true;
-                }
-                else
-                {
-                    Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
-                    SetCursor(icon2, a, new Point(0, 0));
-                }
+            if (e.Button == MouseButtons.Left)
+            {
+                old = new Point(e.X, e.Y);
+                Bitmap a = (Bitmap)Bitmap.FromFile("rock.png");
+                SetCursor(rock, a, new Point(0, 0));
+                mouse_move_pic = true;
+            }
+            else
+            {
+                Bitmap a = (Bitmap)Bitmap.FromFile("dot2.png");
+                SetCursor(icon2, a, new Point(0, 0));
+            }
         }
 
         private void dxf_view_MouseEnter(object sender, EventArgs e)
@@ -278,8 +282,8 @@ namespace dxftry
             int rowindex = Convert.ToInt32(pointdata.Rows[e.RowIndex].Cells[0].Value);
             number_label.Text = pointarray[rowindex].number.ToString();
             int x, y;
-            x = pointarray[rowindex].location.X - s.X;
-            y = pointarray[rowindex].location.Y - s.Y;
+            x = Convert.ToInt32((pointarray[rowindex].location.X * sizenum / pointarray[rowindex].sizenum) - s.X);
+            y = Convert.ToInt32((pointarray[rowindex].location.Y * sizenum / pointarray[rowindex].sizenum) - s.Y);
 
             if (x >= 0 && y >= 0)
             {
@@ -299,7 +303,8 @@ namespace dxftry
             foreach (line cc in dxflines)//掃描線上的起點跟終點
             {
                 Point isthis = cc.start;
-                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) && (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近start
+                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
+                    (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近start
                 {
                     mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
                     mousep.X = mousep.X + isthis.X - s.X;
@@ -312,7 +317,8 @@ namespace dxftry
                 }
 
                 isthis = cc.end;
-                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) && (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近end
+                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
+                    (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近end
                 {
                     mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
                     mousep.X = mousep.X + isthis.X - s.X;
@@ -328,7 +334,8 @@ namespace dxftry
             foreach (circle cc in dxfcircles)//掃描圓心
             {
                 Point isthis = cc.bulleye;
-                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) && (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近圓心
+                if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
+                    (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近圓心
                 {
                     mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
                     mousep.X = mousep.X + isthis.X - s.X;
@@ -368,13 +375,19 @@ namespace dxftry
         {
             if (number_label.Visible)
             {
-                if (number_label.Location.X - dxf_view.Location.X + (e.X - old.X) >= 0 && number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) >= 0)
+                if (number_label.Location.X - dxf_view.Location.X + (e.X - old.X) >= 0 && 
+                    number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) >= 0 &&
+                    number_label.Location.X - dxf_view.Location.X + (e.X - old.X) <= dxf_view.Width && 
+                    number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) <= dxf_view.Height)//檢查移動後標籤是否還在dxf_view內
+
                     number_label.Location = new Point(number_label.Location.X + (e.X - old.X), number_label.Location.Y + (e.Y - old.Y));
-                else
+
+                else//沒在圖內就消失
+
                     number_label.Visible = false;
             }
 
-            if (!active_zeropoint && !startrulerset && mouse_move_pic)
+            if (!active_zeropoint && !startrulerset && mouse_move_pic)//移動畫面
             {
                 s.X = s.X - e.X + old.X;
                 s.Y = s.Y - e.Y + old.Y;
@@ -597,6 +610,8 @@ namespace dxftry
                     pointarray[i].sizechange(1.2);
                 }
 
+                number_label.Location = new Point(Convert.ToInt32(number_label.Location.X * 1.2), Convert.ToInt32(number_label.Location.Y * 1.2));
+
                 double x = s.X * 1.2;//放大後位置校準
                 double y = s.Y * 1.2;
                 s.X = Convert.ToInt32(x);
@@ -645,6 +660,8 @@ namespace dxftry
                 {
                     pointarray[i].sizechange(1/1.2);
                 }
+
+                number_label.Location = new Point(Convert.ToInt32(number_label.Location.X / 1.2), Convert.ToInt32(number_label.Location.Y / 1.2));
 
                 double x = s.X / 1.2;//縮小後位置校準
                 double y = s.Y / 1.2;

@@ -251,9 +251,13 @@
             // number_label
             // 
             this.number_label.AutoSize = true;
+            this.number_label.BackColor = System.Drawing.Color.White;
+            this.number_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.number_label.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.number_label.ForeColor = System.Drawing.Color.Red;
             this.number_label.Location = new System.Drawing.Point(849, 344);
             this.number_label.Name = "number_label";
-            this.number_label.Size = new System.Drawing.Size(41, 15);
+            this.number_label.Size = new System.Drawing.Size(55, 21);
             this.number_label.TabIndex = 23;
             this.number_label.Text = "label2";
             // 

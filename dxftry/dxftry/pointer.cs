@@ -14,7 +14,9 @@ namespace dxftry
         public int x_to_zero, y_to_zero;
         public double x_to_zero_dou, y_to_zero_dou;
         public double ori_x, ori_y;
+        public double sizenum;
 
+        #region build
         public pointer()
         {
             location = new Point();
@@ -39,6 +41,7 @@ namespace dxftry
             number = no;
             location = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
         }
+        #endregion
 
         public void movepoint(Int32 x,Int32 y)
         {
@@ -50,16 +53,16 @@ namespace dxftry
         {
             if (ori_x >= 0 && ori_y >= 0)
             {
-                ori_x *= sizenumber;
-                ori_y *= sizenumber;
+                ori_x *= sizenumber / sizenum;
+                ori_y *= sizenumber / sizenum;
 
                 location.X = Convert.ToInt32(ori_x);
                 location.Y = Convert.ToInt32(ori_x);
             }
             else
             {
-                location.X = Convert.ToInt32(location.X * sizenumber);
-                location.Y = Convert.ToInt32(location.Y * sizenumber);
+                location.X = Convert.ToInt32(location.X * sizenumber / sizenum);
+                location.Y = Convert.ToInt32(location.Y * sizenumber / sizenum);
             }
         }
     }

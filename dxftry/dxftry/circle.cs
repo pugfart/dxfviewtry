@@ -13,6 +13,7 @@ namespace dxftry
         public int radius;
         public double ori_bul_x, ori_bul_y, ori_rad;
 
+        #region build
         public circle()
         {
             this.bulleye = new Point();
@@ -62,8 +63,9 @@ namespace dxftry
             this.bulleye = new Point(Convert.ToInt32(px), Convert.ToInt32(py));
             this.radius = Convert.ToInt32(r);
         }
+        #endregion
 
-
+        #region draw
         public void draw(Bitmap bmp)
         {
             using (Graphics g = Graphics.FromImage(bmp))
@@ -81,6 +83,7 @@ namespace dxftry
                 g.DrawEllipse(Pens.Black, bulleye.X, bulleye.Y, 1, 1);//畫圓心
             }
         }
+        #endregion
 
         public void sizechange(double sizenumber)
         {

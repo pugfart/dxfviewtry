@@ -15,6 +15,7 @@ namespace dxftry
         private string s = "";
         private Font f;
 
+        #region build
         public text()
         {
             f = new Font(s, 10);
@@ -35,8 +36,9 @@ namespace dxftry
             this.word = w;
             this.writepoint = p;
         }
+        #endregion
 
-
+        #region draw
         public void draw(Bitmap bmp)
         {
             using (Graphics g = Graphics.FromImage(bmp))
@@ -52,6 +54,7 @@ namespace dxftry
                 g.DrawString(word, f, Brushes.Black, writepoint);
             }
         }
+        #endregion
 
         public void sizechange(double sizenumber)
         {

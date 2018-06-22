@@ -13,6 +13,7 @@ namespace dxftry
         public Point end;
         public double ori_sta_x, ori_sta_y, ori_end_x, ori_end_y;
 
+        #region build
         public line()
         {
             this.start = new Point();
@@ -77,8 +78,9 @@ namespace dxftry
             this.start = new Point(isx, isy);
             this.end = new Point(iex, iey);
         }
+        #endregion
 
-
+        #region draw
         public void draw(Bitmap bmp)
         {
             using (Graphics g = Graphics.FromImage(bmp))
@@ -94,6 +96,7 @@ namespace dxftry
                 g.DrawLine(Pens.Black, start, end);//畫線
             }
         }
+        #endregion
 
         public void sizechange(double sizenumber)
         {
