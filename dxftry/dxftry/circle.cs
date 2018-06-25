@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * circle類別用於儲存dxf檔案內"圓"的資料
+ * 
+ * 作者 Andrew Hua, Grace Huang
+ * 
+ * 最後改動日期 2018.06.25
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,17 +16,25 @@ namespace dxftry
 {
     class circle
     {
+        /* 參數說明
+         * bulleye 代表圖面上圓心的位置
+         * radius 代表圖面上圓的半徑
+         * ori_bul_x, ori_bul_y, ori_rad 分別儲存從dxf檔讀出的資料
+         */
         public Point bulleye;
         public int radius;
         public double ori_bul_x, ori_bul_y, ori_rad;
 
         #region build
+        /// <summary>
+        /// 建構
+        /// </summary>
         public circle()
         {
             this.bulleye = new Point();
             this.radius = 0;
 
-            ori_bul_x = -1;
+            ori_bul_x = -1;//小於0表示沒有原始資料
             ori_bul_y = -1;
             ori_rad = -1;
         }
@@ -29,7 +44,7 @@ namespace dxftry
             this.bulleye = p;
             this.radius = r;
 
-            ori_bul_x = -1;
+            ori_bul_x = -1;//小於0表示沒有原始資料
             ori_bul_y = -1;
             ori_rad = -1;
         }
@@ -39,7 +54,7 @@ namespace dxftry
             this.bulleye = new Point(px, py);
             this.radius = r;
 
-            ori_bul_x = -1;
+            ori_bul_x = -1;//小於0表示沒有原始資料
             ori_bul_y = -1;
             ori_rad = -1;
         }
@@ -66,6 +81,8 @@ namespace dxftry
         #endregion
 
         #region draw
+        /* 繪圖
+         */
         public void draw(Bitmap bmp)
         {
             using (Graphics g = Graphics.FromImage(bmp))
@@ -85,8 +102,13 @@ namespace dxftry
         }
         #endregion
 
+        /* sizechange用途
+         * 進行縮放時使用
+         * 以有無原始資料決定如何運算
+         */
         public void sizechange(double sizenumber)
         {
+            
             if (ori_bul_x >= 0 && ori_bul_y >= 0 && ori_rad >= 0)
             {
                 ori_bul_x *= sizenumber;
