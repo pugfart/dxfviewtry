@@ -1,5 +1,5 @@
 ﻿/* 
- * 主操作頁面
+ * 主操作頁面 名稱暫定 機械手通教點介面(Common Robot Pointer Interface)
  * 
  * 作者 Andrew Hua, Grace Huang
  * 
@@ -69,7 +69,7 @@ namespace dxftry
          * pixellength 單位像素代表的長度
          * ori_lock_x, ori_lock_y 鎖點時暫存該點資料
          */
-        private bool active_zeropoint = false, zero_exist = false, startrulerset = false, ruler_exist = false;//可以標點? 可以標零點? 零點存在? 設比例尺? 比例尺存在?
+        private bool active_zeropoint = false, zero_exist = false, startrulerset = false, ruler_exist = false;//可以標零點? 零點存在? 設比例尺? 比例尺存在?
         private pointer[] pointarray;//標點資料
         private Int32 count,c;//標點號碼 比例尺設定用
         private originpoint zeropoint;//原點
@@ -342,7 +342,7 @@ namespace dxftry
                 }
             }
         }
-
+        //------------------------------------------------------------------
         /// <summary>
         /// 滑鼠按下事件
         /// </summary>
@@ -394,10 +394,10 @@ namespace dxftry
             int rowindex = Convert.ToInt32(pointdata.Rows[e.RowIndex].Cells[0].Value);//取得標點編號
             number_label.Text = pointarray[rowindex].number.ToString();
             int x, y;
-            x = Convert.ToInt32((pointarray[rowindex].location.X * sizenum / pointarray[rowindex].sizenum) - s.X);//位置換算
-            y = Convert.ToInt32((pointarray[rowindex].location.Y * sizenum / pointarray[rowindex].sizenum) - s.Y);
+            x = Convert.ToInt32((pointarray[rowindex].location.X) - s.X);//位置換算
+            y = Convert.ToInt32((pointarray[rowindex].location.Y) - s.Y);
 
-            if (x >= 0 && y >= 0)//判斷是否在觀看範圍內 負數表沒有 ***應再限制在dxf_view長寬內
+            if (x >= 0 && y >= 0 && x <= dxf_view.Width && y<=dxf_view.Height)//判斷是否在觀看範圍內 負數表沒有
             {
                 number_label.Visible = true;
                 number_label.Location = new Point(x + dxf_view.Location.X, y + dxf_view.Location.Y);
@@ -406,9 +406,14 @@ namespace dxftry
                 number_label.Visible = false;
         }
 
+        /// <summary>
+        /// 滑鼠在dxf_view上移動事件 *鎖點功能*
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dxf_view_MouseMove(object sender, MouseEventArgs e)
         {
-            Control control = (Control)sender;//鎖點掃描
+            Control control = (Control)sender;
             Form f = new Form();
             this.Cursor = new Cursor(Cursor.Current.Handle);
             Point mousep = new Point();
@@ -421,12 +426,12 @@ namespace dxftry
                         (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近start
                     {
                         mouselock = true;
-                        mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
-                        mousep.X = mousep.X + isthis.X - s.X;
+                        mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));//form在螢幕上的位置
+                        mousep.X = mousep.X + isthis.X - s.X;//form在螢幕位置 + 該點在form的位置 = 滑鼠應該鎖定位置
                         mousep.Y = mousep.Y + isthis.Y - s.Y;
-                        Cursor.Position = mousep;
+                        Cursor.Position = mousep;//游標位置設定
 
-                        ori_lock_x = cc.ori_sta_x;
+                        ori_lock_x = cc.ori_sta_x;//暫存鎖點原始資料
                         ori_lock_y = cc.ori_sta_y;
                         //Cursor.Clip = new Rectangle(this.Location, this.Size);
                     }
@@ -451,7 +456,7 @@ namespace dxftry
                     }
                 }
 
-                if (!mouselock)//沒鎖在線上在掃圓心
+                if (!mouselock)//沒鎖在線上再掃圓心
                     foreach (circle bb in dxfcircles)//掃描圓心
                     {
                         Point isthis = bb.bulleye;
@@ -473,17 +478,32 @@ namespace dxftry
             }
         }
 
+        /// <summary>
+        /// 工具列measure->square center
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void squareCenterToolStripMenuItem_Click(object sender, EventArgs e)//點方形4角算中心
         {
 
         }
 
+        /// <summary>
+        /// 工具列measure->set scale->a4 設a4比例尺
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void a4ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             pixellength = 1/sizenum;
             ruler_exist = true;
         }
 
+        /// <summary>
+        /// 工具列measure->set scale->other 沒適合選項時自己設定比例尺
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void otherToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult d = MessageBox.Show("右邊長度請記得輸入", "注意", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
@@ -495,16 +515,21 @@ namespace dxftry
             }
         }
 
+        /// <summary>
+        /// 在dxf_view上放開滑鼠事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dxf_view_MouseUp(object sender, MouseEventArgs e)
         {
-            if (number_label.Visible)
+            if (number_label.Visible)//查找用label是否正在使用
             {
                 if (number_label.Location.X - dxf_view.Location.X + (e.X - old.X) >= 0 && 
                     number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) >= 0 &&
                     number_label.Location.X - dxf_view.Location.X + (e.X - old.X) <= dxf_view.Width && 
                     number_label.Location.Y - dxf_view.Location.Y + (e.Y - old.Y) <= dxf_view.Height)//檢查移動後標籤是否還在dxf_view內
 
-                    number_label.Location = new Point(number_label.Location.X + (e.X - old.X), number_label.Location.Y + (e.Y - old.Y));
+                    number_label.Location = new Point(number_label.Location.X + (e.X - old.X), number_label.Location.Y + (e.Y - old.Y));//調整至新位置
 
                 else//沒在圖內就消失
 
@@ -513,18 +538,23 @@ namespace dxftry
 
             if (!active_zeropoint && !startrulerset && mouse_move_pic)//移動畫面
             {
-                s.X = s.X - e.X + old.X;
+                s.X = s.X - e.X + old.X;//用滑鼠點下位置與放開位置計算畫面移動距離
                 s.Y = s.Y - e.Y + old.Y;
                 dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
                 mouse_move_pic = false;
             }            
         }
 
+        /// <summary>
+        /// 載入form事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
-            number_label.Visible = false;//一開始 點位數字不會顯示
+            number_label.Visible = false;//一開始 查找用label不會顯示
             
-            blackpen = new Pen(Color.Black);//用黑線畫dxf
+            blackpen = new Pen(Color.Black);//用黑線畫dxf ***可被取代
             blackpen.Width = 1;
             draw_dxf = new Bitmap(dxf_view.Width, dxf_view.Height);//先在bitmap畫
             using (dxfpen = Graphics.FromImage(draw_dxf))
@@ -533,28 +563,35 @@ namespace dxftry
             }
             dxf_view.Image = draw_dxf;//刷新
 
-            count = 0;
+            count = 0;//標點資料列建立
             pointarray = new pointer[10];
             pointarray[0] = new pointer();
-            this.dxf_view.BackColor = Color.Transparent;
 
             s = new Point(0, 0);//起始看bitmap的位置(0,0)
             sizenum = 1;
 
-            dxflines = new List<line>();
+            dxflines = new List<line>();//dxf的list建立
             dxfcircles = new List<circle>();
             dxftext = new List<text>();
 
-            icon1 = Image.FromFile("dot1.png");
-            icon2 = Image.FromFile("dot2.png");//點滑鼠的圖
+            icon1 = Image.FromFile("dot1.png");//黑色準心 沒用到
+            icon2 = Image.FromFile("dot2.png");//紅色準心 點滑鼠的圖
             rock = Image.FromFile("rock.png");//拖拉時的手
         }
 
+        /// <summary>
+        /// 使用other設定時會出現的textbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void length_refer_MouseClick(object sender, MouseEventArgs e)
         {
             length_refer.Text = "";
         }
 
+        /// <summary>
+        /// 簡單讀取dxf方法 只有 線 圓 文字
+        /// </summary>
         private void showdxf()
         {
             draw_dxf.Dispose();//關舊圖
@@ -576,10 +613,10 @@ namespace dxftry
                     do
                     {
                         GetTwoLines();
-                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);
-                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);
-                        else if (line1 == " 11") endlineX = Convert.ToSingle(line2);
-                        else if (line1 == " 21") endlineY = Convert.ToSingle(line2);
+                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);//x起點
+                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);//y起點
+                        else if (line1 == " 11") endlineX = Convert.ToSingle(line2);//x終點
+                        else if (line1 == " 21") endlineY = Convert.ToSingle(line2);//y終點
                     } while (line1 != " 21");
                     startlineX = Convert.ToSingle(startlineX * sizenum);
                     startlineY = Convert.ToSingle((draw_dxf.Height - startlineY * sizenum));
@@ -600,9 +637,9 @@ namespace dxftry
                     do
                     {
                         GetTwoLines();
-                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);
-                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);
-                        else if (line1 == " 40") endlineX = Convert.ToSingle(line2);
+                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);//圓心x
+                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);//圓心y
+                        else if (line1 == " 40") endlineX = Convert.ToSingle(line2);//半徑
                     } while (line1 != " 40");
 
                     startlineX = Convert.ToSingle(startlineX * sizenum);
@@ -615,16 +652,16 @@ namespace dxftry
                     radius = Convert.ToInt32(endlineX);
 
                     dxfcircles.Add(new circle(startlineX, startlineY, endlineX));
-                    Rectangle rec = new Rectangle(pointx - radius, pointy - radius, 2 * radius, 2 * radius);
+                    Rectangle rec = new Rectangle(pointx - radius, pointy - radius, 2 * radius, 2 * radius);//設定矩形 畫圓用
                     using (dxfpen = Graphics.FromImage(draw_dxf))
                     {
-                        dxfpen.DrawEllipse(blackpen, rec);
+                        dxfpen.DrawEllipse(blackpen, rec);//再矩形內畫與四邊貼齊的圓
                         //dxfpen.DrawEllipse(Pens.DarkBlue, pointx, pointy, 1, 1);//圓心點
                         draw_dxf.SetPixel(pointx, pointy, Color.DarkBlue);//圓心點
                     }
                 }
 
-                else if(line1=="  0"&&line2=="MTEXT")
+                else if(line1=="  0"&&line2=="MTEXT")//讀文字
                 {
                     pointx = pointy = 0;
                     string s="";
@@ -632,9 +669,9 @@ namespace dxftry
                     do
                     {
                         GetTwoLines();
-                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);
-                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);
-                        else if (line1 == "  1") s = line2;
+                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);//寫的位置x
+                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);//寫的位置y
+                        else if (line1 == "  1") s = line2;//文字內容
                     } while (line1 != "  1");
 
                     pointx = Convert.ToInt32(Math.Round(startlineX * sizenum));
@@ -648,7 +685,7 @@ namespace dxftry
                     }
                 }
 
-                else if (line1 == "  0" && line2 == "TEXT")
+                else if (line1 == "  0" && line2 == "TEXT")//讀文字
                 {
                     pointx = pointy = 0;
                     string s = "";
@@ -656,9 +693,9 @@ namespace dxftry
                     do
                     {
                         GetTwoLines();
-                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);
-                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);
-                        else if (line1 == "  1") s = line2;
+                        if (line1 == " 10") startlineX = Convert.ToSingle(line2);//寫的位置x
+                        else if (line1 == " 20") startlineY = Convert.ToSingle(line2);//寫的位置y
+                        else if (line1 == "  1") s = line2;//文字內容
                     } while (line1 != "  1");
 
                     pointx = Convert.ToInt32(Math.Round(startlineX * sizenum));
@@ -671,11 +708,18 @@ namespace dxftry
                         dxfpen.DrawString(s, f, Brushes.Black, p);
                     }
                 }
-            } while (line1 != "EOF" && line2 != "EOF");
+            } while (line1 != "EOF" && line2 != "EOF");//dxf最後一行文字 表結束
 
             dxf_view.Image = draw_dxf;            
         }
         
+        /// <summary>
+        /// 畫面擷取方法
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
         private Image cut(Point s, int width, int height)//看部分dxf
         {
             Bitmap cutimage = new Bitmap(width, height);
@@ -685,6 +729,12 @@ namespace dxftry
             return cutimage;
         }
 
+        /// <summary>
+        /// 游標圖案設定方法
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="cursor"></param>
+        /// <param name="hotPoint"></param>
         public void SetCursor(Image a, Bitmap cursor, Point hotPoint)//游標
         {
             int hotX = hotPoint.X;
@@ -698,6 +748,11 @@ namespace dxftry
             myNewCursor.Dispose();
         }
 
+        /// <summary>
+        /// 滾輪事件 縮放
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dxf_view_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)//滾輪縮放
         {
             if (e.Delta > 0) //放大圖片
@@ -712,6 +767,7 @@ namespace dxftry
                 using (Graphics g = Graphics.FromImage(draw_dxf))
                     g.Clear(Color.White);
 
+                //圖片資料縮放改變
                 foreach (line cc in dxflines)
                 {
                     cc.sizechange(1.2);
@@ -732,7 +788,7 @@ namespace dxftry
 
                 for (int i = 1; i <= count; i++)
                 {
-                    pointarray[i].sizechange(1.2);
+                    pointarray[i].sizechange(sizenum);
                 }
 
                 number_label.Location = new Point(Convert.ToInt32(number_label.Location.X * 1.2), Convert.ToInt32(number_label.Location.Y * 1.2));
@@ -763,6 +819,7 @@ namespace dxftry
                 using (Graphics g = Graphics.FromImage(draw_dxf))
                     g.Clear(Color.White);
 
+                //圖片資料縮放改變
                 foreach (line cc in dxflines)
                 {
                     cc.sizechange(1 / 1.2);
@@ -783,7 +840,7 @@ namespace dxftry
 
                 for (int i = 1; i <= count; i++)
                 {
-                    pointarray[i].sizechange(1/1.2);
+                    pointarray[i].sizechange(1/sizenum);
                 }
 
                 number_label.Location = new Point(Convert.ToInt32(number_label.Location.X / 1.2), Convert.ToInt32(number_label.Location.Y / 1.2));
@@ -810,13 +867,6 @@ namespace dxftry
             double lengthset = Convert.ToDouble(length_refer.Text);
             pixellength = lengthset / l;
             label1.Text = l.ToString() + "  " + lengthset.ToString() + "  " + pixellength.ToString();
-        }
-
-        private double distance_calculator(pointer p)
-        {
-            double result;
-            result = pixellength * Math.Sqrt(p.x_to_zero * p.x_to_zero + p.y_to_zero * p.y_to_zero);
-            return result;
         }
 
         private int pointer_x_to_zero(pointer p)

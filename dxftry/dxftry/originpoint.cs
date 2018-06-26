@@ -64,7 +64,7 @@ namespace dxftry
 
                 drawpoint.X = Convert.ToInt32(this.ori_x);
                 drawpoint.Y = Convert.ToInt32(this.ori_y);
-            }
+            }//FIIX ME
         }
     }
 }
