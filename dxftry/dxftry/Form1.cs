@@ -1,9 +1,11 @@
 ﻿/* 
  * 主操作頁面 名稱暫定 機械手通教點介面(Common Robot Pointer Interface)
  * 
+ * 功能簡介 匯入DXF檔，在其圖面上標記點位，並將其點位資料傳送給手臂
+ * 
  * 作者 Andrew Hua, Grace Huang
  * 
- * 最後改動日期 2018.06.25
+ * 最後改動日期 2018.06.27
  */
 using System;
 using System.Collections.Generic;
@@ -107,6 +109,7 @@ namespace dxftry
         /// <param name="e"></param>
         private void picturebigger_Click(object sender, EventArgs e)
         {
+            if (startrulerset) return;
             sizenum *= 1.5;//放大1.5倍
             zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";//右上角顯示目前倍率
             draw_dxf.Dispose();//關舊圖
@@ -138,7 +141,7 @@ namespace dxftry
                 cc.draw(draw_dxf);
             }
 
-            for (int i = 0; i >= count; i++)
+            for (int i = 1; i <= count; i++)
             {
                 pointarray[i].sizechange(1.5);
             }
@@ -162,6 +165,7 @@ namespace dxftry
 
         private void picturesmaller_Click(object sender, EventArgs e)
         {
+            if (startrulerset) return;
             sizenum /= 1.5;//縮小1.5倍
             zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";//右上角顯示目前倍率
             draw_dxf.Dispose();//關舊圖
@@ -193,7 +197,7 @@ namespace dxftry
                 cc.draw(draw_dxf);
             }
 
-            for (int i = 0; i >= count; i++)
+            for (int i = 1; i <= count; i++)
             {
                 pointarray[i].sizechange(1/1.5);
             }
@@ -279,25 +283,37 @@ namespace dxftry
         private void dxf_view_MouseClick(object sender, MouseEventArgs e)
         {
             DataGridViewRowCollection pdata = pointdata.Rows;//宣告右邊表格"行"控制項
-            if (e.Button == MouseButtons.Right && !active_zeropoint && zero_exist && ruler_exist)//普通標點 條件:滑鼠右鍵,沒在標原點,原點存在,比例尺存在
-            {
+            if (e.Button == MouseButtons.Right && !active_zeropoint && zero_exist && ruler_exist && !mouse_move_pic)//普通標點 條件:滑鼠右鍵,沒在標原點,原點存在,比例尺存在
+            {                                                                                                       
                 count++;//計算標到第幾點
                 pointarray[count] = new pointer(s.X + e.X, s.Y + e.Y, count);//用dxf_view座標與滑鼠座標算出該像素在bitmap位置
-                draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Red);//標的位置
+                draw_dxf.SetPixel(s.X + e.X, s.Y + e.Y, Color.Red);//標的位置//如點到bitmap外會崩潰 FIX ME
                 pointarray[count].x_to_zero = pointer_x_to_zero(pointarray[count]);//與原點距離 單位:像素
                 pointarray[count].y_to_zero = pointer_y_to_zero(pointarray[count]);
-                pointarray[count].x_to_zero_dou = pointarray[count].x_to_zero * pixellength;//用比例尺算與原點距離
-                pointarray[count].y_to_zero_dou = pointarray[count].y_to_zero * pixellength;
+
                 if (mouselock)
                 {
                     pointarray[count].ori_x = ori_lock_x;//存鎖點的資料
                     pointarray[count].ori_y = ori_lock_y;
+                    if (zeropoint.ori_x >= 0 && zeropoint.ori_y >= 0)
+                    {
+                        pointarray[count].x_to_zero_dou = (pointarray[count].ori_x - zeropoint.ori_x) * pixellength;
+                        pointarray[count].y_to_zero_dou = (pointarray[count].ori_y - zeropoint.ori_y) * pixellength;
+                    }
+                    else
+                    {
+                        pointarray[count].x_to_zero_dou = pointarray[count].x_to_zero * pixellength;//用比例尺算與原點距離
+                        pointarray[count].y_to_zero_dou = pointarray[count].y_to_zero * pixellength;
+                    }
                 }
                 else
                 {
                     pointarray[count].ori_x = -1;//沒鎖點便存-1
                     pointarray[count].ori_y = -1;
+                    pointarray[count].x_to_zero_dou = pointarray[count].x_to_zero * pixellength;//用比例尺算與原點距離
+                    pointarray[count].y_to_zero_dou = pointarray[count].y_to_zero * pixellength;
                 }
+
                 pointarray[count].sizenum = sizenum;//標點時的縮放倍率
                 dxf_view.Image = cut(s, dxf_view.Width, dxf_view.Height);
 
@@ -306,7 +322,7 @@ namespace dxftry
                 label1.Text = label1.Text + "\n" + pointarray[count].x_to_zero_dou.ToString() + "\n" + pointarray[count].y_to_zero_dou.ToString() + "\n" + count.ToString();//測試用 ***完成後應刪除
             }
 
-            else if (active_zeropoint && ruler_exist && e.Button == MouseButtons.Right)//原點標點
+            else if (active_zeropoint && ruler_exist && e.Button == MouseButtons.Right && !mouse_move_pic)//原點標點
             {
                 if (zero_exist)//如有上個原點 將其變回白色
                     draw_dxf.SetPixel(zeropoint.drawpoint.X, zeropoint.drawpoint.Y, Color.White);
@@ -328,7 +344,7 @@ namespace dxftry
                 label1.Text = label1.Text + "\n" + zeropoint.drawpoint.X.ToString() + "\n" + zeropoint.drawpoint.Y.ToString();//測試用 ***完成後應刪除
             }
 
-            if (startrulerset && e.Button == MouseButtons.Right)//設比例尺 點圖面上兩點手動填入距離算比例尺
+            if (startrulerset && e.Button == MouseButtons.Right && !mouse_move_pic)//設比例尺 點圖面上兩點手動填入距離算比例尺
             {
                 if (c == 1) rulers = new Point(s.X + e.X, s.Y + e.Y);//第一點座標
                 if (c == 2) rulere = new Point(s.X + e.X, s.Y + e.Y);//第二點座標
@@ -483,7 +499,7 @@ namespace dxftry
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void squareCenterToolStripMenuItem_Click(object sender, EventArgs e)//點方形4角算中心
+        private void squareCenterToolStripMenuItem_Click(object sender, EventArgs e)//點方形4角or對角算中心 FIX ME NOT FINISH
         {
 
         }
@@ -536,7 +552,7 @@ namespace dxftry
                     number_label.Visible = false;
             }
 
-            if (!active_zeropoint && !startrulerset && mouse_move_pic)//移動畫面
+            if (mouse_move_pic)//移動畫面
             {
                 s.X = s.X - e.X + old.X;//用滑鼠點下位置與放開位置計算畫面移動距離
                 s.Y = s.Y - e.Y + old.Y;
@@ -757,6 +773,7 @@ namespace dxftry
         {
             if (e.Delta > 0) //放大圖片
             {
+                if (startrulerset) return;
                 sizenum *= 1.2;
                 zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";
                 draw_dxf.Dispose();//關舊圖
@@ -809,6 +826,7 @@ namespace dxftry
             }
             else//縮小圖片
             {
+                if (startrulerset) return;
                 sizenum /= 1.2;
                 zoomsizenum.Text = Math.Round(sizenum, 2).ToString() + "*";
                 draw_dxf.Dispose();//關舊圖

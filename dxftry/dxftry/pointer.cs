@@ -19,7 +19,7 @@ namespace dxftry
         /* 參數說明
          * location 表圖面上該點位置
          * number 表此點編號
-         * x_to_zero, y_to_zero 表圖面上 此點與原點相隔多少像素
+         * x_to_zero, y_to_zero 標點當下 圖面上此點與原點相隔多少像素
          * x_to_zero_dou, y_to_zero_dou 表經過比例尺換算與原點相隔多少距離
          * ori_x, ori_y 如果標點時有鎖點 便會在此紀錄該點原始資料
          * sizenum 表標點時縮放的幅度 在圖面縮放時使用

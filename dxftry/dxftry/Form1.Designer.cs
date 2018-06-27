@@ -121,9 +121,9 @@
             // length_refer
             // 
             this.length_refer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.length_refer.Location = new System.Drawing.Point(688, 609);
+            this.length_refer.Location = new System.Drawing.Point(699, 609);
             this.length_refer.Name = "length_refer";
-            this.length_refer.Size = new System.Drawing.Size(122, 25);
+            this.length_refer.Size = new System.Drawing.Size(111, 25);
             this.length_refer.TabIndex = 19;
             this.length_refer.Text = "在此輸入長度";
             this.length_refer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -189,14 +189,14 @@
             // a4ToolStripMenuItem
             // 
             this.a4ToolStripMenuItem.Name = "a4ToolStripMenuItem";
-            this.a4ToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.a4ToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.a4ToolStripMenuItem.Text = "A4";
             this.a4ToolStripMenuItem.Click += new System.EventHandler(this.a4ToolStripMenuItem_Click);
             // 
             // otherToolStripMenuItem
             // 
             this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
-            this.otherToolStripMenuItem.Size = new System.Drawing.Size(124, 26);
+            this.otherToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.otherToolStripMenuItem.Text = "Other";
             this.otherToolStripMenuItem.Click += new System.EventHandler(this.otherToolStripMenuItem_Click);
             // 
@@ -257,9 +257,9 @@
             this.number_label.ForeColor = System.Drawing.Color.Red;
             this.number_label.Location = new System.Drawing.Point(849, 344);
             this.number_label.Name = "number_label";
-            this.number_label.Size = new System.Drawing.Size(55, 21);
+            this.number_label.Size = new System.Drawing.Size(91, 21);
             this.number_label.TabIndex = 23;
-            this.number_label.Text = "label2";
+            this.number_label.Text = "查找用label";
             // 
             // Form1
             // 
