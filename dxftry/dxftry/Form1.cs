@@ -248,10 +248,13 @@ namespace dxftry
                 readdxf = new StreamReader(filepath);
                 pre_readthread = new ThreadStart(showdxf);
                 readthread = new Thread(pre_readthread);
+                if (readthread.IsAlive)//如以有執行緒 就先關閉
+                    readthread.Abort();
+
                 readthread.Start();
-                System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示
+                //System.Threading.Thread.Sleep(500);//等0.5秒讀取 0.5秒後顯示//突然發現不等待不關也沒關係 2018.06.28
                 //Refresh();//刷新圖片
-                readthread.Abort();//結束讀檔執行緒
+                //readthread.Abort();//結束讀檔執行緒
             }
 
             //各項資料重置
@@ -297,7 +300,7 @@ namespace dxftry
                     pointarray[count].ori_y = ori_lock_y;
                     if (zeropoint.ori_x >= 0 && zeropoint.ori_y >= 0)
                     {
-                        pointarray[count].x_to_zero_dou = (pointarray[count].ori_x - zeropoint.ori_x) * pixellength;
+                        pointarray[count].x_to_zero_dou = (pointarray[count].ori_x - zeropoint.ori_x) * pixellength;//有原始資料便用原始資料算距離
                         pointarray[count].y_to_zero_dou = (pointarray[count].ori_y - zeropoint.ori_y) * pixellength;
                     }
                     else
@@ -452,28 +455,33 @@ namespace dxftry
                         //Cursor.Clip = new Rectangle(this.Location, this.Size);
                     }
                     else
-                    {
-                        isthis = cc.end;
-                        if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
-                            (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近end
-                        {
-                            mouselock = true;
-                            mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
-                            mousep.X = mousep.X + isthis.X - s.X;
-                            mousep.Y = mousep.Y + isthis.Y - s.Y;
-                            Cursor.Position = mousep;
-
-                            ori_lock_x = cc.ori_end_x;
-                            ori_lock_y = cc.ori_end_y;
-                            //Cursor.Clip = new Rectangle(this.Location, this.Size);
-                        }
-                        else
-                            mouselock = false;
-                    }
+                        mouselock = false;
                 }
 
-                if (!mouselock)//沒鎖在線上再掃圓心
-                    foreach (circle bb in dxfcircles)//掃描圓心
+                if (Cursor.Position != mousep)
+                {
+                    Point isthis = cc.end;
+                    if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
+                        (e.Y + s.Y - isthis.Y < 5 && e.Y + s.Y - isthis.Y > -5))//滑鼠靠近end
+                    {
+                        mouselock = true;
+                        mousep = control.PointToScreen(new Point(f.Location.X, f.Location.Y));
+                        mousep.X = mousep.X + isthis.X - s.X;
+                        mousep.Y = mousep.Y + isthis.Y - s.Y;
+                        Cursor.Position = mousep;
+
+                        ori_lock_x = cc.ori_end_x;
+                        ori_lock_y = cc.ori_end_y;
+                        //Cursor.Clip = new Rectangle(this.Location, this.Size);
+                    }
+                    else
+                        mouselock = false;
+                }
+                }
+
+            if (Cursor.Position != mousep)//沒鎖在線上再掃圓心
+            { 
+                foreach (circle bb in dxfcircles)//掃描圓心
                     {
                         Point isthis = bb.bulleye;
                         if ((e.X + s.X - isthis.X < 5 && e.X + s.X - isthis.X > -5) &&
@@ -887,6 +895,11 @@ namespace dxftry
             label1.Text = l.ToString() + "  " + lengthset.ToString() + "  " + pixellength.ToString();
         }
 
+        /// <summary>
+        /// 跟原點距離
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         private int pointer_x_to_zero(pointer p)
         {
             return p.location.X - zeropoint.drawpoint.X;
